@@ -1,22 +1,8 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+input {
+  padding: 1rem 0;
+  margin-bottom: 1em;
 }
 
-html {
-  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
-  background: #333;
-  color: whitesmoke;
-}
-
-body {
-  min-height: 100vh;
-  font-size: 1.5rem;
-  padding: 0 10% 10%;
-}
-
-input,
 textarea,
 button,
 select {
@@ -24,13 +10,11 @@ select {
   margin-bottom: 1em;
 }
 
-main {
-  max-width: 500px;
-  margin: auto;
-}
-
 section {
-  margin-top: 1em;
+  font-size: 1rem;
+  text-align: center;
+  padding: 2rem 5rem;
+  margin: auto;
 }
 
 article {
