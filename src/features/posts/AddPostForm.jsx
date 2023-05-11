@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { postAdded } from "./postsSlice";
+
+//we need to replace our postAdded to the addNewPost function
+import { addNewPost } from "./postsSlice";
+// import { postAdded } from "./postsSlice";
 import { selectAllUsers } from "../users/userSlice";
 import "./posts.css";
 
@@ -9,6 +12,7 @@ const AddPostForm = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [userId, setUserId] = useState("");
+  const [addRequestStatus, setAddRequestStatus] = useState("idle");
 
   const users = useSelector(selectAllUsers);
 
@@ -19,16 +23,38 @@ const AddPostForm = () => {
 
   const dispatch = useDispatch();
 
+  //this code checks the condition of all the states to be true and in the Save Post button below, it uses to disable the button if one of the state is not true
+  // const canSave = Boolean(title) && Boolean(content) && Boolean(userId);
+
+  //this checks the title, content, userId and addRequestStatus === 'idle' to be true; note that the title, content, userId are wrapped inside an array and an every(Boolean) checks the condition for all
+  const canSave =
+    [title, content, userId].every(Boolean) && addRequestStatus === "idle";
+
   //on clicking the button with this function (which is an event for our button), it will automatically push (using the postAdded reducer function we've have created) the post (including the post id (nanoid), post title, and post content to the current posts state)
 
   const onSavePostClicked = () => {
-    //statement to check that title and content must be true
-    if (title && content) {
-      //don't forget that the postAdded function takes both state and action as parameter, where the action is the new post id, title, and contents data that will be generated from the input and textarea element after clicking the submit button
-      dispatch(postAdded(title, content, userId));
-      //after checking the statement and running the code inside the if block, we want to set both title and content back to default (""); so that we can create a new post with it
-      setTitle("");
-      setContent("");
+    // //statement to check that title and content must be true
+    // if (title && content) {
+    //   //don't forget that the postAdded function takes both state and action as parameter, where the action is the new post id, title, and contents data that will be generated from the input and textarea element after clicking the submit button
+    //   dispatch(postAdded(title, content, userId));
+    //   //after checking the statement and running the code inside the if block, we want to set both title and content back to default (""); so that we can create a new post with it
+    //   setTitle("");
+    //   setContent("");
+    // }
+
+    if (canSave) {
+      try {
+        setAddRequestStatus("pending");
+        dispatch(addNewPost({ title, body: content, userId })).unwrap();
+
+        setTitle("");
+        setContent("");
+        setUserId("");
+      } catch (error) {
+        console.error("Failed to save the post", error);
+      } finally {
+        setAddRequestStatus("idle");
+      }
     }
   };
 
@@ -40,9 +66,6 @@ const AddPostForm = () => {
       </option>
     );
   });
-
-  //this code checks the condition of all the states to be true and in the Save Post button below, it uses to disable the button if one of the state is not true
-  const canSave = Boolean(title) && Boolean(content) && Boolean(userId);
 
   return (
     <section>
