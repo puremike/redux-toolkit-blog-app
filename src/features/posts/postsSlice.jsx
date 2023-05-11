@@ -126,14 +126,10 @@ const postsSlice = createSlice({
 });
 
 export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
-  try {
-    const response = await axios.get(POSTS_URL);
-    // const data = response.json();
-    // return data;
-    return [...response.data];
-  } catch (err) {
-    return err.message;
-  }
+  const response = await axios.get(POSTS_URL);
+  // const data = response.json();
+  // return data;
+  return [...response.data];
 });
 
 //this will handle how we add new post
